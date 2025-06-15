@@ -22,10 +22,6 @@ class BotConfig(BaseConfig):
     bot_token: str
     admin_ids: list[int]
 
-    # @property
-    # def bot_token(self) -> str:
-    #     return self.bot_token.replace(r"\x3a", ":")
-
 
 class DBConfig(BaseConfig):
     db_host: str
@@ -83,5 +79,3 @@ class Config(BaseConfig):
 
 def load_config() -> Config:
     return Config.load()
-
-print(load_config().core.log_level)
