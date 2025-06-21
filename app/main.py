@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.core import load_config
-from app.bot import dp, bot, base_router
+from app.bot import dp, bot, base_router, catalog_router
 from app.api import webhook_router
 
 
@@ -15,6 +15,7 @@ settings = load_config()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     dp.include_router(base_router)
+    dp.include_router(catalog_router)
     webhook_url = settings.api.get_webhook_url
     await bot.set_webhook(url=webhook_url,
                           allowed_updates=dp.resolve_used_update_types(),
