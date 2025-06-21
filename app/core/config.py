@@ -69,12 +69,20 @@ class TestConfig(BaseConfig):
         )
 
 
+class Link(BaseConfig):
+    url_channel: str
+    url_bot: str
+    et_channel: str
+    et_bot: str
+
+
 class Config(BaseConfig):
     core: CoreConfig = CoreConfig.load()
     bot: BotConfig = BotConfig.load()
     db: DBConfig = DBConfig.load()
     api: APIConfig = APIConfig.load()
     test: TestConfig = TestConfig.load()
+    link: Link = Link.load()
 
 
 def load_config() -> Config:
