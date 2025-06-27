@@ -3,6 +3,16 @@ from app.core import load_config
 
 settings = load_config()
 
+
+class BaseButtonFont:
+    apply = "✅ Применить"
+    callback_apply = "apply"
+    reset = "❌ Сбросить"
+    callback_reset = "reset"
+    right = "⏩"
+    left = "⏪"
+
+
 class StartButtonFont:
     catalog = "🏷️ Каталог"
     callback_catalog = "catalog"
@@ -26,19 +36,18 @@ class FiltersButtonFont:
     callback_brand = "brand"
     volume = "🧴 Объем"
     callback_volume = "volume"
-    fortress = "Крепость"
+    fortress = "⚡ Крепость"
     callback_fortress = "fortress"
     chill = "🧊 Холодок"
     callback_chill = "chill"
     type_nicotine = "🧪 Тип никотина"
     callback_type_nicotine = "type_nicotine"
     price = "💲 Цена"
-    callback_price = "price"
-    apply = "✅ Применить"
-    callback_apply = "apply"
+    callback_price = "price"  #! OTHER FUNCTION
 
-    @property
-    def get_all_callback(self) -> list[str]:
-        lst_callback = [callback for callback in dir(self)
-                        if callback.startswith("callback")]
+    @classmethod
+    def get_all_callback(cls) -> list[str]:
+        lst_callback = [getattr(cls, callback) for callback in dir(cls)
+                        if callback.startswith("callback") and
+                        callback not in ("callback_apply", "callback_price")]
         return lst_callback

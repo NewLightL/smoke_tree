@@ -6,3 +6,4 @@ class MessageFont:
 class CatalogFont:
     introductory_page = "Выбери фильтры или начни сразу смотреть каталог"
     filters_page = "Выбери фильтры"
+    filter_page = "Выбери значение фильтра"
