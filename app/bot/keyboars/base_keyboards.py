@@ -1,7 +1,9 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.bot.fonts.button_font import StartButtonFont, CatalogButtonFont, FiltersButtonFont
+from app.bot.fonts.button_font import (
+    StartButtonFont, CatalogButtonFont,
+    FiltersButtonFont, BaseButtonFont
+    )
 
 
 start_keyboard = InlineKeyboardMarkup(
@@ -42,7 +44,7 @@ all_filters = InlineKeyboardMarkup(
                               callback_data=FiltersButtonFont.callback_type_nicotine)],
         [InlineKeyboardButton(text=FiltersButtonFont.price,  # цена
                               callback_data=FiltersButtonFont.callback_price)],
-        [InlineKeyboardButton(text=FiltersButtonFont.apply,  # применить
-                              callback_data=FiltersButtonFont.callback_apply)],
+        [InlineKeyboardButton(text=BaseButtonFont.apply,  # применить
+                              callback_data=BaseButtonFont.callback_apply)],
     ]
 )
