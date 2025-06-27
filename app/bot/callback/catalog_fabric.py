@@ -13,5 +13,5 @@ class Action(str, Enum):
 class CallbackProduct(CallbackData, prefix="products"):
     action: Action
     filter_type: str|None = None  # "taste", "brand" и т.д.
-    value: str|int|float|bool|None = None  # выбранное значение
+    value: int|float|bool|str|None = None  # выбранное значение
     page: int = 0  # текущая страница
