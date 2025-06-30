@@ -7,3 +7,6 @@ class CatalogFont:
     introductory_page = "Выбери фильтры или начни сразу смотреть каталог"
     filters_page = "Выбери фильтры"
     filter_page = "Выбери значение фильтра"
+    write_price = "Введи цену товара"
+    not_correct_price = "Ты ввел что-то не то, поробуй еще раз"
+    end_of_select_price = "Ты ввел цену"
