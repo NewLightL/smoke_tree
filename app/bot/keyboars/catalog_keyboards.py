@@ -1,36 +1,84 @@
-from typing import Any
+from typing import Any, Literal
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.db import ProductsDAO
 from app.bot.callback.catalog_fabric import CallbackProduct, Action
 from app.bot.fonts.button_font import BaseButtonFont
+from app.bot.utils.catalog import CatalogUtils
 
 
 async def get_peg_filter(column_name: str, filter_data: dict[str, Any],
                          page: int = 0) -> InlineKeyboardMarkup:  # TODOs доделать клавиатуру
 
-    def _check_value_in_data(text: Any):
+    def _check_value_in_data(text: Any) -> str:
         item: str|None = filter_data.get(column_name)
-        # if isinstance(item, bool):
-        #     correct_text = str(int(text))
-        # else:
-        # is_selected=False, correct_text='False',
+        is_selected = item == text
+        correct_text = CatalogUtils.translate_bool(text)
+        return f"✅ {correct_text}" if is_selected else str(correct_text)
 
-        #! type(correct_text)=<class 'str'>,
-        #! text=False, type(text)=<class 'bool'>,
-        #! item='1', type(item)=<class 'str'>,
-        #! filter_data={'brand': 'Husky', 'volume': '35.0', 'chill': '1'}
-        #! is_selected=False, correct_text='True',
-        #! type(correct_text)=<class 'str'>, text=True,
-        #! type(text)=<class 'bool'>, item='1', type(item)=<class 'str'>,
-        #! filter_data={'brand': 'Husky', 'volume': '35.0', 'chill': '1'}
+    def _check_correctness_variable(data: list[Any]) -> Literal["str", "int", "float", "bool"]:
+        item = data[0]
+        if isinstance(item, bool):
+            return "bool"
+        elif isinstance(item, str):
+            return "str"
+        elif isinstance(item, int):
+            return "int"
+        elif isinstance(item, float):
+            return "float"
+        else:
+            raise TypeError("variable is not correct type")
 
-        correct_text = str(text)
-        is_selected = item == correct_text
-        # print(f"{is_selected=}, {correct_text=}, {type(correct_text)=}, "\
-        #     f"{text=}, {type(text)=}, {item=}, {type(item)=}, {filter_data=}")
-        return f"✅ {text}" if is_selected else str(text)
+
+    def _create_correct_select_button(text: str,
+                                      callback_type: Literal["str", "int", "float", "bool"],
+                                      el: Any,
+                                      page: int = 0) -> InlineKeyboardButton:
+        button: InlineKeyboardButton
+        if callback_type == "str":
+            button = InlineKeyboardButton(
+                text=text,
+                callback_data=CallbackProduct(
+                    action=Action.select,
+                    filter_type=column_name,
+                    value_str=el,
+                    page=page
+                    ).pack()
+            )
+        elif callback_type == "int":
+            button = InlineKeyboardButton(
+                text=text,
+                callback_data=CallbackProduct(
+                    action=Action.select,
+                    filter_type=column_name,
+                    value_int=el,
+                    page=page
+                    ).pack()
+            )
+        elif callback_type == "float":
+            button = InlineKeyboardButton(
+                text=text,
+                callback_data=CallbackProduct(
+                    action=Action.select,
+                    filter_type=column_name,
+                    value_float=el,
+                    page=page
+                    ).pack()
+            )
+        elif callback_type == "bool":
+            button = InlineKeyboardButton(
+                text=text,
+                callback_data=CallbackProduct(
+                    action=Action.select,
+                    filter_type=column_name,
+                    value_bool=el,
+                    page=page
+                    ).pack()
+            )
+        else:
+            raise TypeError("not correct type for inline button")
+        return button
 
     builder = InlineKeyboardBuilder()
 
@@ -41,15 +89,12 @@ async def get_peg_filter(column_name: str, filter_data: dict[str, Any],
     if is_one_page:
         for el in data:
             builder.row(
-                InlineKeyboardButton(
-                    text=_check_value_in_data(el),
-                    callback_data=CallbackProduct(
-                        action=Action.select,
-                        filter_type=column_name,
-                        value=el,
-                        page=page
-                    ).pack()
-                ))
+                _create_correct_select_button(
+                _check_value_in_data(el),
+                _check_correctness_variable(data), # type: ignore
+                el,
+                page
+            ))
 
     else:
         start_offset = page * per_page
@@ -57,14 +102,13 @@ async def get_peg_filter(column_name: str, filter_data: dict[str, Any],
         one_page_data = data[start_offset: end_offset]
 
         for el in one_page_data:
-            builder.row(InlineKeyboardButton(
-                text=_check_value_in_data(el),
-                callback_data=CallbackProduct(
-                    action=Action.select,
-                    filter_type=column_name,
-                    value=el,
-                    page=page).pack())
-            )
+            builder.row(
+                _create_correct_select_button(
+                _check_value_in_data(el),
+                _check_correctness_variable(data), # type: ignore
+                el,
+                page
+            ))
 
         buttons_row = []
         if page > 0:
