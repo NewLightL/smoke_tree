@@ -10,6 +10,7 @@ from app.bot.fonts.message_font import CatalogFont
 from app.bot.state.catalog_state import ViewCatalog
 from app.bot.filters.catalog_filters import CorrectColumn
 from app.bot.callback.catalog_fabric import Action, CallbackProduct
+from app.bot.utils.catalog import CatalogUtils
 
 
 router = Router()
@@ -48,17 +49,16 @@ async def handle_filters(call: CallbackQuery, state: FSMContext, name_column: st
 async def click_on_parametr(call: CallbackQuery, callback_data: CallbackProduct,
                             state: FSMContext):
     await call.answer()
-
-    if await state.get_value(callback_data.filter_type) == callback_data.value:  # type: ignore
+    key, value = CatalogUtils.get_correct_variable(callback_data.pack())
+    if await state.get_value(callback_data.filter_type) == value:  # type: ignore
         data = await state.get_data()
-        if not data.get(callback_data.filter_type):  # type: ignore
-            return
         del data[callback_data.filter_type]  # type: ignore
         await state.set_data(data)
     else:
-        # TODOs Привести к изначальному типу
-        await state.update_data({callback_data.filter_type: callback_data.value})  # type: ignore
-
+        # TODOs Привести к изначальному типу bool
+        if key == "value_bool":
+            value = bool(value)
+        await state.update_data({callback_data.filter_type: value})  # type: ignore
 
     data = await state.get_data()
     await call.message.edit_text(text=CatalogFont.filter_page,  # type: ignore
@@ -113,6 +113,5 @@ async def change_page_filter_parametr(call: CallbackQuery, state: FSMContext,
 async def apply_filter_parametr(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.view_filters)
-    await call.message.edit_text(CatalogFont.filters_page,
+    await call.message.edit_text(CatalogFont.filters_page,  # type: ignore
                                  reply_markup=base_kb.all_filters)
-    print(await state.get_data())
