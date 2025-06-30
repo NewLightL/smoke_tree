@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, Message
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
@@ -55,7 +55,6 @@ async def click_on_parametr(call: CallbackQuery, callback_data: CallbackProduct,
         del data[callback_data.filter_type]  # type: ignore
         await state.set_data(data)
     else:
-        # TODOs Привести к изначальному типу bool
         if key == "value_bool":
             value = bool(value)
         await state.update_data({callback_data.filter_type: value})  # type: ignore
@@ -66,6 +65,31 @@ async def click_on_parametr(call: CallbackQuery, callback_data: CallbackProduct,
                                      callback_data.filter_type,  # type: ignore
                                      data,
                                      callback_data.page))
+
+
+@router.callback_query(F.data == FiltersButtonFont.callback_price,
+                       StateFilter(ViewCatalog.view_filters))
+async def write_price_for_item(call: CallbackQuery, state: FSMContext):
+    await call.answer()
+    await state.set_state(ViewCatalog.select_price)
+    await call.message.edit_text(text=CatalogFont.write_price)  # type: ignore
+
+
+@router.message(~F.text.isdigit(),
+                StateFilter(ViewCatalog.select_price))
+async def not_correct_price_for_item(mess: Message):
+    await mess.answer(text=CatalogFont.not_correct_price)  # type: ignore
+
+
+@router.message(F.text.isdigit(),
+                StateFilter(ViewCatalog.select_price),
+                F.text.as_("price"))
+async def correct_price_for_item(mess: Message, state: FSMContext, price: int):
+    await state.update_data({"price": price})
+    await state.set_state(ViewCatalog.view_filters)
+    await mess.answer(text=CatalogFont.end_of_select_price)
+    await mess.answer(CatalogFont.filters_page,
+                    reply_markup=base_kb.all_filters)
 
 
 @router.callback_query(StateFilter(ViewCatalog.view_filter_parametr),
