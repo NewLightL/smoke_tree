@@ -9,7 +9,7 @@ from app.bot.utils.catalog import CatalogUtils
 
 
 async def get_peg_filter(column_name: str, filter_data: dict[str, Any],
-                         page: int = 0) -> InlineKeyboardMarkup:  # TODOs доделать клавиатуру
+                         page: int = 0) -> InlineKeyboardMarkup:
 
     def _check_value_in_data(text: Any) -> str:
         item: str|None = filter_data.get(column_name)
@@ -29,7 +29,6 @@ async def get_peg_filter(column_name: str, filter_data: dict[str, Any],
             return "float"
         else:
             raise TypeError("variable is not correct type")
-
 
     def _create_correct_select_button(text: str,
                                       callback_type: Literal["str", "int", "float", "bool"],

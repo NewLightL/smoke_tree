@@ -98,7 +98,8 @@ async def reset_one_filter(call: CallbackQuery, state: FSMContext,
                            callback_data: CallbackProduct):
     await call.answer()
     data = await state.get_data()
-    if not data.get(callback_data.filter_type):  # type: ignore
+    return_value = data.get(callback_data.filter_type)  # type: ignore
+    if return_value is None:  # type: ignore
         return
     del data[callback_data.filter_type]  # type: ignore
     await state.set_data(data)
