@@ -44,6 +44,8 @@ all_filters = InlineKeyboardMarkup(
                               callback_data=FiltersButtonFont.callback_type_nicotine)],
         [InlineKeyboardButton(text=FiltersButtonFont.price,  # цена
                               callback_data=FiltersButtonFont.callback_price)],
+        [InlineKeyboardButton(text=BaseButtonFont.reset,  # сбросить
+                              callback_data=BaseButtonFont.callback_reset)],
         [InlineKeyboardButton(text=BaseButtonFont.apply,  # применить
                               callback_data=BaseButtonFont.callback_apply)],
     ]

@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 
 import app.bot.keyboars.base_keyboards as base_kb
 from app.bot.keyboars.catalog_keyboards import get_peg_filter
-from app.bot.fonts.button_font import StartButtonFont, CatalogButtonFont, FiltersButtonFont
+from app.bot.fonts.button_font import BaseButtonFont, StartButtonFont, CatalogButtonFont, FiltersButtonFont
 from app.bot.fonts.message_font import CatalogFont
 from app.bot.state.catalog_state import ViewCatalog
 from app.bot.filters.catalog_filters import CorrectColumn
@@ -111,12 +111,13 @@ async def reset_one_filter(call: CallbackQuery, state: FSMContext,
 
 
 @router.callback_query(StateFilter(ViewCatalog.view_filters),
-                       CallbackProduct.filter(F.action == Action.reset))
+                       F.data == BaseButtonFont.callback_reset)
 async def reset_all_filters(call: CallbackQuery, state: FSMContext):
     await call.answer()
-    await state.clear()
-    await call.message.edit_text(text=CatalogFont.filters_page,  # type: ignore
-                                 reply_markup=base_kb.all_filters)
+    data = await state.get_data()
+    if not data:
+        return
+    await state.set_data({})
 
 
 @router.callback_query(StateFilter(ViewCatalog.view_filter_parametr),
