@@ -1,5 +1,6 @@
 .env
 TODOs.md
 
+static/
 __venv__/
 __pycache__/
