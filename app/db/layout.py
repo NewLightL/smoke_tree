@@ -7,6 +7,7 @@ from app.db.database import Base
 
 
 class Products(Base):
+    photo_id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     taste: Mapped[str]
     brand: Mapped[str]
