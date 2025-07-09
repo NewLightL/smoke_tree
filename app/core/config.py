@@ -16,6 +16,7 @@ class BaseConfig(BaseSettings):
 class CoreConfig(BaseConfig):
     mode: Literal["PROD", "DEV", "TEST"]
     log_level: int
+    static_path: str
 
 
 class BotConfig(BaseConfig):
