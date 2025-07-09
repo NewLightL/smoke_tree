@@ -29,6 +29,6 @@ async def lifespan(app: FastAPI):
 
 fastapi_app = FastAPI(lifespan=lifespan)
 
-fastapi_app.mount(r"/static", StaticFiles(directory=r"app/static"), "static")
+fastapi_app.mount(r"/static", StaticFiles(directory=settings.core.static_path), "static")
 
 fastapi_app.include_router(webhook_router)
