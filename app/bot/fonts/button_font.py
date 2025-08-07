@@ -51,3 +51,9 @@ class FiltersButtonFont:
                         if callback.startswith("callback") and
                         callback not in ("callback_apply", "callback_price")]
         return lst_callback
+
+
+class SearchButtonFont:
+    write_to_admin = "🤵‍♂️ Заказать"
+    return_to_home = "🏡 Домой"
+    return_to_filters = "🔍 К фильтрам"
