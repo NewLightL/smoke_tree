@@ -1,4 +1,5 @@
-from sqlalchemy import select
+from typing import Any, Sequence
+from sqlalchemy import select, func
 
 from app.db.basedao import BaseDAO
 from app.db.layout import Products
@@ -8,9 +9,46 @@ class ProductsDAO(BaseDAO):
     model = Products
 
     @classmethod
+    async def select_products_by_filter(cls, **filter_by: Any):  # type: ignore
+        price_in_filter = "price" in filter_by.keys()
+
+        async with cls.conn.sessionf() as sess:
+            if not filter_by:
+                query = select(Products)
+            elif price_in_filter:
+                standart_filter = filter_by.copy()
+                del standart_filter['price']
+
+                query = select(Products).filter(
+                    Products.price <= int(filter_by["price"]), **standart_filter)
+            else:
+                query = select(Products).filter_by(**filter_by)
+
+            # print(query.compile(compile_kwargs={"literal_binds": True}))
+            res = await sess.execute(query)
+            answer = res.scalars().all()
+            if not answer:
+                return None
+            return answer
+
+
+    @classmethod
     async def select_all_meaning_from_column(cls, column_name: str):
         column = getattr(cls.model, column_name)
         query = select(column).distinct().order_by(column)
+
+        async with cls.conn.sessionf() as sess:
+            res = await sess.execute(query)
+            return res.scalars().all()
+
+
+    @classmethod  # TODOs сделать поиск по названию
+    async def get_all_by_name(cls, name: str) -> Sequence[Products]:
+        query = select(cls.model).where(
+        Products.name.ilike(f"%{name}%")
+    ).order_by(
+        func.similarity(Products.name, name).desc()
+    )
 
         async with cls.conn.sessionf() as sess:
             res = await sess.execute(query)
