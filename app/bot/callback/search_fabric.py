@@ -2,9 +2,6 @@ from enum import Enum
 
 from aiogram.filters.callback_data import CallbackData
 
-from app.bot.callback.callback_core import Action
-
-
 class SearchAction(Enum):
     select = "select"
     # apply = "apply"
