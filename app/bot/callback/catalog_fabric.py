@@ -9,7 +9,6 @@ class Action(str, Enum):
     reset = "reset"
     paginate = "paginate"
 
-
 class CallbackProduct(CallbackData, prefix="products"):
     action: Action
     filter_type: str|None = None  # "taste", "brand" и т.д.
