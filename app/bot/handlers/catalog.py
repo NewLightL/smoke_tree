@@ -1,9 +1,10 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery, Message, InputMediaPhoto, FSInputFile
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
 import app.bot.keyboars.base_keyboards as base_kb
+from app.bot.callback.search_fabric import SearchAction, SearchCallback
 from app.bot.keyboars.catalog_keyboards import get_peg_filter
 from app.bot.fonts.button_font import BaseButtonFont, StartButtonFont, CatalogButtonFont, FiltersButtonFont
 from app.bot.fonts.message_font import CatalogFont
@@ -15,22 +16,49 @@ from app.bot.utils.catalog import CatalogUtils
 
 router = Router()
 
-
 @router.callback_query(F.data == StartButtonFont.callback_catalog)
-async def catalog_view(call: CallbackQuery, state: FSMContext):
+async def catalog_view_answer(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_introductory_page)
+    await state.set_data({})
     await call.answer()
-    await call.message.edit_text(CatalogFont.introductory_page, # type: ignore
-                                 reply_markup=base_kb.search_catalog)
+    await call.message.edit_text(  # type: ignore
+        CatalogFont.introductory_page,
+        reply_markup=base_kb.search_catalog)
+
+
+@router.callback_query(StateFilter(ViewCatalog.view_items),
+                       SearchCallback.filter(F.action == SearchAction.home))
+async def catalog_view_delete_last_mess(call: CallbackQuery, state: FSMContext):
+    await state.set_state(ViewCatalog.view_introductory_page)
+    await state.set_data({})
+    await call.answer()
+    await call.bot.delete_message(chat_id=call.message.chat.id,
+                                  message_id=call.message.message_id)
+    await call.message.answer(  # type: ignore
+        CatalogFont.introductory_page,
+        reply_markup=base_kb.search_catalog)
+
+
+@router.callback_query(StateFilter(ViewCatalog.view_items),
+                       SearchCallback.filter(F.action == SearchAction.filter))
+async def filter_view_answer(call: CallbackQuery, state: FSMContext):
+    await state.set_state(ViewCatalog.view_filters)
+    await call.answer()
+    await call.bot.delete_message(chat_id=call.message.chat.id,
+                                  message_id=call.message.message_id)
+    await call.message.answer( # type: ignore
+            CatalogFont.filters_page,
+            reply_markup=base_kb.all_filters)
 
 
 @router.callback_query(F.data == CatalogButtonFont.callback_filter,
                        StateFilter(ViewCatalog.view_introductory_page))
-async def filter_view(call: CallbackQuery, state: FSMContext):
+async def filter_view_edit(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_filters)
     await call.answer()
-    await call.message.edit_text(CatalogFont.filters_page, # type: ignore
-                                 reply_markup=base_kb.all_filters)
+    await call.message.edit_text( # type: ignore
+        CatalogFont.filters_page,
+        reply_markup=base_kb.all_filters)
 
 
 @router.callback_query(CorrectColumn(FiltersButtonFont.get_all_callback()),
