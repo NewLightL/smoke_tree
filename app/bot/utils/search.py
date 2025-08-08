@@ -1,5 +1,4 @@
 import os
-from typing import Any
 
 from aiogram.types.input_file import FSInputFile
 
@@ -14,7 +13,7 @@ settings = load_config()
 class SearchUtils():
     @classmethod  # TODOS доделать вывод сообщения
     def create_message_for_item_card(cls, product: Products|None):
-        if product is None:
+        if not product:
             text = SearchFont.incorrect_name
         else:
             text = SearchFont.card_item.format(
