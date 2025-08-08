@@ -1,5 +1,6 @@
 .env
 TODOs.md
+*.ipynb
 
 static/
 __venv__/
