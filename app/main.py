@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 
 from app.core import load_config
-from app.bot import dp, bot, base_router, catalog_router, search_router
+from app.bot import dp, bot, base_router, catalog_router, search_router, UserInChanel
 from app.api import webhook_router
 from app.db.helper import helper
 
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
     dp.include_router(catalog_router)
     dp.include_router(search_router)
     dp.include_router(base_router)
+    dp.update.outer_middleware(UserInChanel())
     webhook_url = settings.api.get_webhook_url
     await bot.set_webhook(url=webhook_url,
                           allowed_updates=dp.resolve_used_update_types(),
