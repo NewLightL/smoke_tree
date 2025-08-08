@@ -8,6 +8,7 @@ from app.bot.callback.search_fabric import SearchAction, SearchCallback
 from app.bot.keyboars.catalog_keyboards import get_peg_filter
 from app.bot.fonts.button_font import BaseButtonFont, StartButtonFont, CatalogButtonFont, FiltersButtonFont
 from app.bot.fonts.message_font import CatalogFont
+from app.bot.fonts.call_font import CallAnswerFont
 from app.bot.state.catalog_state import ViewCatalog
 from app.bot.filters.catalog_filters import CorrectColumn
 from app.bot.callback.catalog_fabric import Action, CallbackProduct
@@ -124,7 +125,7 @@ async def correct_price_for_item(mess: Message, state: FSMContext, price: int):
                        CallbackProduct.filter(F.action == Action.reset))
 async def reset_one_filter(call: CallbackQuery, state: FSMContext,
                            callback_data: CallbackProduct):
-    await call.answer()
+    await call.answer(CallAnswerFont.reset)
     data = await state.get_data()
     return_value = data.get(callback_data.filter_type)  # type: ignore
     if return_value is None:  # type: ignore
@@ -141,7 +142,7 @@ async def reset_one_filter(call: CallbackQuery, state: FSMContext,
 @router.callback_query(StateFilter(ViewCatalog.view_filters),
                        F.data == BaseButtonFont.callback_reset)
 async def reset_all_filters(call: CallbackQuery, state: FSMContext):
-    await call.answer()
+    await call.answer(CallAnswerFont.reset)
     data = await state.get_data()
     if not data:
         return
