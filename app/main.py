@@ -6,10 +6,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
+from sqladmin import Admin
 
 from app.core import load_config
 from app.bot import dp, bot, base_router, catalog_router, search_router, UserInChanel
 from app.api import webhook_router
+from app.admin import ProductsView, OrdersView, UsersView, OrdersProductsView
 from app.db.helper import helper
 
 
@@ -38,3 +40,10 @@ fastapi_app = FastAPI(lifespan=lifespan)
 fastapi_app.mount(r"/static", StaticFiles(directory=settings.core.static_path), "static")
 
 fastapi_app.include_router(webhook_router)
+
+admin = Admin(fastapi_app, helper.engine)
+
+admin.add_view(ProductsView)
+admin.add_view(OrdersView)
+admin.add_view(OrdersProductsView)
+admin.add_view(UsersView)
