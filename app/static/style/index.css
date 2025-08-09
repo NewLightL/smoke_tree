@@ -1,0 +1,127 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+/* NULLABLE */
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+:focus, :active {
+  outline: none;
+}
+
+a:focus, a:active {
+  outline: none;
+}
+
+nav, footer, header, aside {
+  display: block;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-size: 100%;
+  line-height: 1;
+  font-size: 14px;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+input, button, textarea {
+  font-family: inherit;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+a, a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: 400;
+}
+
+/* NULLABLE */
+body {
+  background-color: rgb(255, 255, 255);
+}
+
+.page {
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: "normal";
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex: 200px;
+  align-items: center;
+  justify-content: center;
+}
+.page .main {
+  width: 45%;
+  height: 60%;
+  background-color: rgba(78, 78, 78, 0.862745098);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.page .main__auth {
+  width: 80%;
+  height: 80%;
+  display: grid;
+  grid-column: 1fr;
+  grid-row: 2fr 2fr 1fr;
+}
+.page .main__auth_login, .page .main__auth_password, .page .main__auth_submit {
+  width: 100%;
+  height: 40%;
+}
+.page .main__auth_login label, .page .main__auth_password label, .page .main__auth_submit label {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  font-style: "normal";
+  color: white;
+  display: block;
+  margin-bottom: 1%;
+}
+.page .main__auth_login button, .page .main__auth_password button, .page .main__auth_submit button {
+  background-color: rgb(52, 143, 179);
+  width: 70%;
+  height: 30%;
+}
+.page .main__auth_login input, .page .main__auth_password input, .page .main__auth_submit input {
+  width: 100%;
+  height: 40%;
+}/*# sourceMappingURL=index.css.map */
