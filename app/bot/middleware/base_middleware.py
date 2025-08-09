@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable, Dict
+from typing import Any, Awaitable, Callable
 from aiogram.fsm.middleware import BaseMiddleware  # type: ignore
 from aiogram.types import TelegramObject, User, ChatMemberLeft
 
@@ -10,14 +10,14 @@ from app.bot.fonts.middleware_font import MiddlewareFont
 settings = load_config()
 
 
-class UserInChanel(BaseMiddleware):  #! ДОДЕЛАТЬ МИДЛТВАРЬ
+class UserInChanel(BaseMiddleware):
     """Checks if the user is in the channels"""
     async def __call__(self,
                        handler: Callable[[TelegramObject,
-                                          Dict[str, Any]],
+                                          dict[str, Any]],
                                          Awaitable[Any]],
                        event: TelegramObject,
-                       data: Dict[str, Any]) -> Any:
+                       data: dict[str, Any]) -> Any:
         user: User = data.get('event_from_user')  # type: ignore
         my_channel: str = settings.link.et_channel
 
