@@ -1,0 +1,51 @@
+@use "../scss/blocks/font" as font;
+@use "../scss/blocks/null";
+
+
+body {
+    background-color: rgb(255, 255, 255);
+}
+
+.page {
+    @include font.get_font();
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex: 200px;
+    align-items: center;
+    justify-content: center;
+    .main {
+        width: 45%;
+        height: 60%;
+        background-color: #4e4e4edc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &__auth {
+            width: 80%;
+            height: 80%;
+            display: grid;
+            grid-column: 1fr;
+            grid-row: 2fr 2fr 1fr;
+            &_login, &_password, &_submit {
+                width: 100%;
+                height: 40%;
+                label {
+                    @include font.get_font(15px, 300);
+                    color: white;
+                    display: block;
+                    margin-bottom: 1%;
+                };
+                button {
+                    background-color: rgb(52, 143, 179);
+                    width: 70%;
+                    height: 30%;
+                };
+                input {
+                    width: 100%;
+                    height: 40%;
+                };
+            }
+        }
+    }
+}
