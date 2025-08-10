@@ -4,23 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../../static/style/index.css" rel="stylesheet">
-    <title>Регистрация</title>
+    <title>Личный кабинет</title>
 </head>
 <body>
     <div class="page">
         <main class="main">
-            <div class="main__auth">
-            <form action="/auth" method="post" accept-charset="utf-8">
-                <div class="main__auth_login">
-                    <label for="login">Логин</label>
-                    <input type="text" name="login" id="login">
-                </div>
-                <div class="main__auth_password">
-                    <label for="password">Пароль</label>
-                    <input type="password" name="password" id="password">
-                </div>
-                <div class="main__auth_submit">
-                    <button type="submit">Подтвердить</button>
+            <div class="main__menu">
+            <form action="/admin" method="get" accept-charset="utf-8">
+                <div class="main__menu_admin">
+                    <button type="submit">Админка</button>
                 </div>
             </form>
             </div>
