@@ -28,10 +28,9 @@ class SearchUtils():
 
 
     @classmethod  # TODOs доделать вывод фото
-    def get_photo_products_by_id(cls, photo_id: int|None):
+    def get_photo_products_by_id(cls, photo: int|None):
         # path = f"../../static/{photo_id}.jpg"
-        if photo_id is None:
+        if photo is None:
             return None
-        path = os.path.join(os.getcwd(), settings.core.static_path, "photo",
-                            "products", f'{photo_id}.jpg')
+        path = os.path.join(os.getcwd(), f'{photo}')
         return FSInputFile(path=path)
