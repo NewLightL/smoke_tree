@@ -47,6 +47,8 @@ class APIConfig(BaseConfig):
     fastapi_port: int
     base_site: str
     secret_webhook: str
+    jwt_alghoritm: str
+    jwt_key: str
 
     @property
     def get_webhook_url(self) -> str:
