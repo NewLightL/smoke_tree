@@ -4,6 +4,7 @@ from starlette.responses import Response
 
 import app.core.excepction.auth as ex_auth
 from app.api.auth.crud import AuthCrud
+from app.api.auth.check_token import get_current_user
 
 
 class AuthAdmin(AuthenticationBackend):
@@ -30,6 +31,10 @@ class AuthAdmin(AuthenticationBackend):
         token = request.session.get("token")
 
         if not token:
+            return False
+
+        user_id = await get_current_user(token)
+        if not user_id:
             return False
 
         # Check the token in depth
