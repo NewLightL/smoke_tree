@@ -35,7 +35,7 @@ async def search_products(call: CallbackQuery, state: FSMContext):
 
     product = products[per_page]
     await call.message.edit_media(InputMediaPhoto(
-        media=SearchUtils.get_photo_products_by_id(product.photo_id), # type: ignore
+        media=SearchUtils.get_photo_products_by_id(product.photo), # type: ignore
         caption=SearchUtils.create_message_for_item_card(product),), # type: ignore
         reply_markup=await get_search_peg_keyboard(len(products), per_page)) # type: ignore
 
@@ -58,7 +58,7 @@ async def peg_products(call: CallbackQuery, state: FSMContext, callback_data: Se
     product = products[callback_data.page]
 
     await call.message.edit_media(InputMediaPhoto(
-        media=SearchUtils.get_photo_products_by_id(product.photo_id),
+        media=SearchUtils.get_photo_products_by_id(product.photo),
         caption=SearchUtils.create_message_for_item_card( # type: ignore
         product # type: ignore
         ),),
@@ -90,6 +90,6 @@ async def get_name(message: Message, state: FSMContext, name: str):
     product = products[per_page]
     await message.answer_photo(
         caption=SearchUtils.create_message_for_item_card(product),
-        photo=SearchUtils.get_photo_products_by_id(product.photo_id),
+        photo=SearchUtils.get_photo_products_by_id(product.photo),
         reply_markup=await get_search_peg_keyboard(
             len(products), per_page))
