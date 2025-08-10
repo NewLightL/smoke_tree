@@ -1,13 +1,14 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, func, Computed
+from sqlalchemy import ForeignKey, func, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.db.utils.filetype import FileType
 
 from app.db.database import Base
 
 
 class Products(Base):
-    photo_id: Mapped[int] = mapped_column(primary_key=True)
+    photo = Column(FileType())
     name: Mapped[str]
     taste: Mapped[str]
     brand: Mapped[str]
