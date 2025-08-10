@@ -21,6 +21,7 @@ class SearchUtils():
                 product.brand,
                 product.taste,
                 product.volume,
+                product.fortress,
                 product.type_nicotine,
                 CatalogUtils.translate_bool(product.chill),
                 (SearchFont.last_products if
