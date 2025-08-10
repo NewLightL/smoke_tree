@@ -89,39 +89,38 @@ body {
   justify-content: center;
 }
 .page .main {
-  width: 45%;
+  width: 40%;
   height: 60%;
-  background-color: rgba(78, 78, 78, 0.862745098);
+  background-color: rgba(20, 77, 190, 0.7176470588);
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.page .main__auth {
-  width: 80%;
-  height: 80%;
+.page .main__menu {
+  width: 60%;
+  height: 45%;
   display: grid;
-  grid-column: 1fr;
-  grid-row: 2fr 2fr 1fr;
+  grid-column: 1fr 1fr 1fr;
+  grid-row: 1fr 1fr 1fr;
 }
-.page .main__auth_login, .page .main__auth_password, .page .main__auth_submit {
+.page .main__menu_admin {
   width: 100%;
-  height: 40%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.page .main__auth_login label, .page .main__auth_password label, .page .main__auth_submit label {
+.page .main__menu_admin form {
+  width: 100%;
+  height: 100%;
+}
+.page .main__menu_admin button {
   font-family: "Inter", sans-serif;
-  font-size: 15px;
-  font-weight: 300;
+  font-size: 100%;
+  font-weight: 600;
   font-style: "normal";
-  color: white;
-  display: block;
-  margin-bottom: 1%;
-}
-.page .main__auth_login button, .page .main__auth_password button, .page .main__auth_submit button {
-  background-color: rgb(52, 143, 179);
-  width: 70%;
-  height: 30%;
-}
-.page .main__auth_login input, .page .main__auth_password input, .page .main__auth_submit input {
+  background-color: rgb(255, 255, 255);
+  color: black;
   width: 100%;
-  height: 40%;
+  height: 60%;
 }/*# sourceMappingURL=index.css.map */
