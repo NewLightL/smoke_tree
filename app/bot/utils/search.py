@@ -23,6 +23,10 @@ class SearchUtils():
                 product.volume,
                 product.type_nicotine,
                 CatalogUtils.translate_bool(product.chill),
+                (SearchFont.last_products if
+                 product.amount <= 3 else
+                 SearchFont.more_products),
+                product.amount,
                 product.price)
         return text
 

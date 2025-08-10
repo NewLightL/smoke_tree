@@ -14,7 +14,9 @@ class CatalogFont:
 
 class SearchFont:
     search_product = "Выбери товар"
+    last_products = "🔥<b>ОСТАЛОСЬ В НАЛИЧИИ</b>🔥"
+    more_products = "✅Есть в наличии"
     card_item = "<b>{}</b>\n\n🏷️ Бренд - {}\n🍏 Вкус - {}\n🧴 Объем - {}\n🧪 Тип никотина - {}\n"\
-        "🧊 Холодок - {}\n\n💰 Цена - {}"
+        "🧊 Холодок - {}\n\n{} - {}\n\n💰Цена - {}"
     search_by_name = "Введи название товара"
     incorrect_name = "Не существует такого товара"
