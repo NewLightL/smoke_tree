@@ -3,6 +3,8 @@ __all__ = (
     "OrdersView",
     "UsersView",
     "OrdersProductsView",
+    "AuthAdmin",
 )
 
 from app.admin.layout import ProductsView, OrdersView, UsersView, OrdersProductsView
+from app.admin.auth import AuthAdmin
