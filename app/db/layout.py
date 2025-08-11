@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import ForeignKey, func, Column
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -31,7 +31,10 @@ class Users(Base):
 
 class Orders(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"))
-    created_at: Mapped[datetime] = mapped_column(default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        default=datetime.now(timezone.utc),
+        server_default=func.now()
+    )
     status: Mapped[str] = mapped_column(default="pending")
     # paid -> created -> Completed 
     # (On Hold, Cancelled, Refunded, Fraud Detected)
