@@ -2,5 +2,6 @@
 TODOs.md
 *.ipynb
 
+app/static/photo/
 __venv__/
 __pycache__/
