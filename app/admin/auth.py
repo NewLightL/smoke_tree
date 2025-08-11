@@ -33,9 +33,12 @@ class AuthAdmin(AuthenticationBackend):
         if not token:
             return False
 
-        user_id = await get_current_user(token)
-        if not user_id:
-            request.session.clear()
+        try:
+            user_id = await get_current_user(token)
+            if not user_id:
+                request.session.clear()
+                return False
+        except (ex_auth.UserException, ex_auth.TokenException):
             return False
 
         # Check the token in depth
