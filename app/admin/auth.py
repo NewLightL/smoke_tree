@@ -31,7 +31,6 @@ class AuthAdmin(AuthenticationBackend):
         token = request.session.get("token")
 
         if not token:
-            request.session.clear()
             return False
 
         user_id = await get_current_user(token)
