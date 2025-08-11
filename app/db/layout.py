@@ -1,3 +1,4 @@
+import math
 from datetime import datetime, timezone
 
 from sqlalchemy import ForeignKey, func, Column
@@ -21,12 +22,26 @@ class Products(Base):
 
     order_product = relationship("OrdersProducts", back_populates="product")
 
+    def __repr__(self) -> str:
+        end_of_string = 10
+        name_len = len(self.name)
+        max_len = 15 if name_len <= end_of_string else math.floor(name_len / 2)
+        correct_name = f"{self.name[:max_len].strip()}{"..." if max_len < end_of_string else ""}"
+        return correct_name
+
 
 class Users(Base):
     name: Mapped[str]
     status: Mapped[str|None]
 
     order = relationship("Orders", back_populates="user")
+
+    def __repr__(self) -> str:
+        end_of_string = 10
+        name_len = len(self.name)
+        max_len = 15 if name_len <= end_of_string else math.floor(name_len / 2)
+        correct_name = f"{self.name[:max_len].strip()}{"..." if max_len < end_of_string else ""}"
+        return correct_name
 
 
 class Orders(Base):
@@ -43,6 +58,9 @@ class Orders(Base):
     order_product = relationship("OrdersProducts", back_populates="order")
     user = relationship("Users", back_populates="order")
 
+    def __repr__(self) -> str:
+        return super().__repr__() + f"{self.id}"
+
 
 class OrdersProducts(Base):
     __tablename__ = 'orders_products' # type: ignore
@@ -55,4 +73,7 @@ class OrdersProducts(Base):
 
     product = relationship("Products", back_populates="order_product")
     order = relationship("Orders", back_populates="order_product")
+
+    def __repr__(self) -> str:
+        return super().__repr__() + f"{self.id}"
 
