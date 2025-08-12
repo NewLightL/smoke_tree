@@ -25,6 +25,7 @@ class ProductsDAO(BaseDAO):
                 query = select(Products).filter_by(**filter_by)
 
             # print(query.compile(compile_kwargs={"literal_binds": True}))
+            query = query.filter(Products.amount > 0)
             res = await sess.execute(query)
             answer = res.scalars().all()
             if not answer:
