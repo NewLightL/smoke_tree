@@ -21,10 +21,8 @@ from app.bot import (
 from app.api import webhook_router
 from app.admin import (
     ProductsView,
-    OrdersView,
     UsersView,
-    OrdersProductsView,
-    AuthAdmin
+    AuthAdmin,
 )
 from app.db.helper import helper
 from app.api.templates.templates import templates
@@ -66,9 +64,8 @@ async def home_page(request: Request):
 fastapi_app.include_router(webhook_router)
 
 admin = Admin(fastapi_app, helper.engine,
-              authentication_backend=AuthAdmin(settings.api.jwt_key))
+              authentication_backend=AuthAdmin(settings.api.jwt_key),
+              templates_dir=r"app\api\templates\admin")
 
 admin.add_view(ProductsView)
-admin.add_view(OrdersView)
-admin.add_view(OrdersProductsView)
 admin.add_view(UsersView)

@@ -3,8 +3,6 @@ from sqladmin import ModelView
 from app.db import (
     Products,
     Users,
-    Orders,
-    OrdersProducts
 )
 
 
@@ -15,6 +13,17 @@ class ProductsView(ModelView, model=Products):
         Products.price,
     ] + [
         Products.order_product
+    ]
+
+    column_searchable_list = [
+        Products.name,
+        Products.brand,
+        Products.id
+    ]
+
+    column_sortable_list = [
+        Products.price,
+        Products.amount
     ]
 
     name = "Товар"
@@ -34,34 +43,3 @@ class UsersView(ModelView, model=Users):
     name = "Пользователь"
     name_plural = "Пользователи"
     icon = "fa-solid fa-user"
-
-
-class OrdersView(ModelView, model=Orders):
-    column_list = [
-        Orders.status,
-        Orders.desc,
-        Orders.created_at
-    ] + [
-        Orders.order_product,
-        Orders.user
-    ]
-
-    column_formatters = {Orders.desc: lambda m, a: m.desc[:15] if m.desc is not None else ""}
-    name = "Заказ"
-    name_plural = "Заказы"
-    icon = "fa-solid fa-truck"
-
-
-class OrdersProductsView(ModelView, model=OrdersProducts):
-    column_list = [
-        OrdersProducts.quantity,
-        OrdersProducts.price_at_order,
-    ] + [
-        OrdersProducts.product,
-        OrdersProducts.order
-    ]
-
-    name = "Заказ_товар"
-    name_plural = "Заказы_Товары"
-    icon = "fa-solid fa-book"
-    
