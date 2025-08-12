@@ -101,7 +101,11 @@ async def click_on_parametr(call: CallbackQuery, callback_data: CallbackProduct,
 async def write_price_for_item(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.select_price)
-    await call.message.edit_text(text=CatalogFont.write_price)  # type: ignore
+    data = await state.get_data()
+    price = data.get("price", None)
+    await call.message.edit_text(  # type: ignore
+        text=CatalogFont.user_price(price)
+        )
 
 
 @router.message(~F.text.isdigit(),
