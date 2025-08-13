@@ -1,6 +1,7 @@
 """
 poetry run uvicorn app.main:fastapi_app
 """
+import logging
 
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
@@ -28,6 +29,8 @@ from app.admin import (
 )
 from app.db.helper import helper
 from app.api.templates.templates import templates
+
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 settings = load_config()
