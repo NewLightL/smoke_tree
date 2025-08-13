@@ -1,3 +1,4 @@
+from json import load
 from typing import Literal, Self
 
 from pydantic_settings import SettingsConfigDict, BaseSettings
@@ -49,11 +50,17 @@ class APIConfig(BaseConfig):
     secret_webhook: str
     jwt_alghoritm: str
     jwt_key: str
+    
 
     @property
     def get_webhook_url(self) -> str:
         """Возвращает URL вебхука с кодированием специальных символов."""
         return f"{self.base_site}/webhook"
+
+    @property
+    def get_origins(self) -> list[str]:
+        """Возвращает origins"""
+        return [f"https://{self.fastapi_host}:{self.fastapi_port}", self.base_site]
 
 
 class TestConfig(BaseConfig):
