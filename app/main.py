@@ -6,6 +6,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+
 from sqlalchemy import text
 from sqladmin import Admin
 
@@ -62,6 +64,14 @@ async def home_page(request: Request):
     )
 
 fastapi_app.include_router(webhook_router)
+
+fastapi_app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.api.get_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=[],
+)
 
 admin = Admin(fastapi_app, helper.engine,
               authentication_backend=AuthAdmin(settings.api.jwt_key),
