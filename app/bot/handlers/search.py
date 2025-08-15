@@ -8,6 +8,7 @@ from app.bot.fonts.button_font import CatalogButtonFont, BaseButtonFont
 from app.bot.fonts.message_font import SearchFont
 from app.bot.fonts.call_font import CallAnswerFont
 from app.bot.keyboars.search_keyboards import get_search_peg_keyboard
+from app.bot.keyboars.base_keyboards import reset_search
 from app.bot.callback.search_fabric import SearchAction, SearchCallback
 from app.bot.utils.search import SearchUtils
 from app.db import ProductsDAO, Products
@@ -72,7 +73,8 @@ async def peg_products(call: CallbackQuery, state: FSMContext, callback_data: Se
 async def search_by_name(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.search_by_name)
-    await call.message.answer(SearchFont.search_by_name)
+    await call.message.answer(SearchFont.search_by_name,
+                              reply_markup=reset_search)
 
 
 @router.message(StateFilter(ViewCatalog.search_by_name),

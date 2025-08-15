@@ -42,6 +42,9 @@ async def catalog_view_delete_last_mess(call: CallbackQuery, state: FSMContext):
 
 @router.callback_query(StateFilter(ViewCatalog.view_items),
                        SearchCallback.filter(F.action == SearchAction.filter))
+@router.callback_query(StateFilter(ViewCatalog.search_by_name,
+                                   ViewCatalog.select_price),
+                       F.data == BaseButtonFont.callback_reset)
 async def filter_view_answer(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_filters)
     await call.answer()
@@ -104,7 +107,8 @@ async def write_price_for_item(call: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     price = data.get("price", None)
     await call.message.edit_text(  # type: ignore
-        text=CatalogFont.user_price(price)
+        text=CatalogFont.user_price(price),
+        reply_markup=base_kb.reset_search
         )
 
 
