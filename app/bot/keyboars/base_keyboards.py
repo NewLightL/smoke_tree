@@ -6,6 +6,14 @@ from app.bot.fonts.button_font import (
     )
 
 
+reset_search = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [InlineKeyboardButton(text=BaseButtonFont.reset,
+                              callback_data=BaseButtonFont.callback_reset)]
+    ]
+)
+
+
 url_to_channel = InlineKeyboardMarkup(
     inline_keyboard=[[
         InlineKeyboardButton(text=StartButtonFont.channel,
