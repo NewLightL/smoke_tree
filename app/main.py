@@ -25,10 +25,13 @@ from app.api import webhook_router
 from app.admin import (
     ProductsView,
     UsersView,
+    OrdersView,
+    OrdersProductsView,
     AuthAdmin,
 )
 from app.db.helper import helper
 from app.api.templates.templates import templates
+from app.db.layout import Orders
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
@@ -82,3 +85,5 @@ admin = Admin(fastapi_app, helper.engine,
 
 admin.add_view(ProductsView)
 admin.add_view(UsersView)
+admin.add_view(OrdersView)
+admin.add_view(OrdersProductsView)
