@@ -23,6 +23,7 @@ class CoreConfig(BaseConfig):
 class BotConfig(BaseConfig):
     bot_token: str
     admin_ids: list[int]
+    admins_et: list[str]
     password: str
 
 
