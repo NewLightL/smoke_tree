@@ -9,7 +9,7 @@ class SearchAction(Enum):
     paginate = "paginate"
     filter = "filter"
     home = "home"
-    admin = "admin"
+    basket = "basket"
 
 
 class SearchCallback(CallbackData, prefix="search"):
