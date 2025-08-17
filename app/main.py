@@ -19,6 +19,7 @@ from app.bot import (
     base_router,
     catalog_router,
     search_router,
+    basket_router,
     UserInChanel,
     RateLimitMiddleware
 )
@@ -47,6 +48,7 @@ async def lifespan(app: FastAPI):
 
     dp.include_router(catalog_router)
     dp.include_router(search_router)
+    dp.include_router(basket_router)
     dp.include_router(base_router)
     dp.update.outer_middleware(UserInChanel())
     dp.message.middleware(RateLimitMiddleware())
