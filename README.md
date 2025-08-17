@@ -11,7 +11,7 @@
 1. Клонируйте репрозиторий
 
    ```bash
-   git clone https://github.com/NewLightL/smooke_tree_bot
+   git clone https://github.com/NewLightL/smooke_tree
    ```
 
 2. Установите зависимости
