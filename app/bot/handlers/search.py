@@ -31,23 +31,40 @@ async def search_products(call: CallbackQuery, state: FSMContext):
     if products is None:
         await call.message.edit_text(
         SearchUtils.create_message_for_item_card(products),
-        reply_markup=await get_search_peg_keyboard(0, per_page))
+        reply_markup=await get_search_peg_keyboard(
+            len_products_list=0,
+            page=per_page))
         return
 
-    product = products[per_page]
+    product: Products = products[per_page]
     await call.message.edit_media(InputMediaPhoto(
         media=SearchUtils.get_photo_products_by_id(product.photo), # type: ignore
         caption=SearchUtils.create_message_for_item_card(product),), # type: ignore
-        reply_markup=await get_search_peg_keyboard(len(products), per_page)) # type: ignore
+        reply_markup=await get_search_peg_keyboard(
+            len_products_list=len(products),
+            product_id=product.id,
+            page=per_page)) # type: ignore
 
 
-# @router.callback_query(StateFilter(ViewCatalog.view_items), # TODOs доделать кнопку выбора
-#                        SearchCallback.filter(F.action == Action.select))
-# async def view_product(call: CallbackQuery, state: FSMContext, callback_data: SearchCallback):
-#     await call.answer()
-#     await state.set_state(ViewCatalog.card_item)
-#     product: Products = await ProductsDAO.select_by_id(callback_data.product_id)  # type: ignore
-#     await call.message.edit_caption(SearchUtils.create_message_for_item_card(product))
+@router.callback_query(StateFilter(ViewCatalog.view_items),
+                       SearchCallback.filter(F.action == SearchAction.select))
+async def view_product(call: CallbackQuery, state: FSMContext, callback_data: SearchCallback):
+
+    data = await state.get_data()
+    basket = data.get("basket")
+
+    if basket is None:
+        basket = {}
+
+    if callback_data.product_id in basket.keys():
+        del basket[callback_data.product_id]
+        await state.update_data({"basket": basket})
+        await call.answer(CallAnswerFont.product_remove)
+        return
+
+    basket[callback_data.product_id] = 1
+    await state.update_data({"basket": basket})
+    await call.answer(CallAnswerFont.product_select)
 
 
 @router.callback_query(StateFilter(ViewCatalog.view_items),
@@ -56,7 +73,7 @@ async def peg_products(call: CallbackQuery, state: FSMContext, callback_data: Se
     await call.answer()
     data = await state.get_data()
     products = await ProductsDAO.select_products_by_filter(**data)
-    product = products[callback_data.page]
+    product: Products = products[callback_data.page]
 
     await call.message.edit_media(InputMediaPhoto(
         media=SearchUtils.get_photo_products_by_id(product.photo),
@@ -65,6 +82,7 @@ async def peg_products(call: CallbackQuery, state: FSMContext, callback_data: Se
         ),),
         reply_markup=await get_search_peg_keyboard(
             len(products), # type: ignore
+            product.id,
             callback_data.page))
 
 
@@ -86,7 +104,8 @@ async def get_name(message: Message, state: FSMContext, name: str):
     if not products:
         await message.answer(
         SearchUtils.create_message_for_item_card(None),
-        reply_markup=await get_search_peg_keyboard(len(products), per_page)) # type: ignore
+        reply_markup=await get_search_peg_keyboard(
+            len(products), per_page)) # type: ignore
         return
 
     product = products[per_page]
@@ -94,4 +113,6 @@ async def get_name(message: Message, state: FSMContext, name: str):
         caption=SearchUtils.create_message_for_item_card(product),
         photo=SearchUtils.get_photo_products_by_id(product.photo),
         reply_markup=await get_search_peg_keyboard(
-            len(products), per_page))
+            len(products),
+            product.id,
+            per_page))

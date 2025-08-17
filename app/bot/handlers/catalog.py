@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, Message, InputMediaPhoto, FSInputFile
+from aiogram.types import CallbackQuery, Message
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 
@@ -20,18 +20,25 @@ router = Router()
 @router.callback_query(F.data == StartButtonFont.callback_catalog)
 async def catalog_view_answer(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_introductory_page)
-    await state.set_data({})
+    basket = await state.get_value("basket")
+    await state.set_data({"basket": basket})
     await call.answer()
     await call.message.edit_text(  # type: ignore
         CatalogFont.introductory_page,
         reply_markup=base_kb.search_catalog)
 
 
-@router.callback_query(StateFilter(ViewCatalog.view_items),
-                       SearchCallback.filter(F.action == SearchAction.home))
+@router.callback_query(
+    StateFilter(
+    ViewCatalog.view_items,
+    ViewCatalog.view_basket),
+    SearchCallback.filter(F.action == SearchAction.home))
+@router.callback_query(StateFilter(ViewCatalog.view_basket),
+                       F.data == StartButtonFont.callback_catalog)
 async def catalog_view_delete_last_mess(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_introductory_page)
-    await state.set_data({})
+    basket = await state.get_value("basket")
+    await state.set_data({"basket": basket})
     await call.answer()
     await call.bot.delete_message(chat_id=call.message.chat.id,
                                   message_id=call.message.message_id)
@@ -40,8 +47,11 @@ async def catalog_view_delete_last_mess(call: CallbackQuery, state: FSMContext):
         reply_markup=base_kb.search_catalog)
 
 
-@router.callback_query(StateFilter(ViewCatalog.view_items),
-                       SearchCallback.filter(F.action == SearchAction.filter))
+@router.callback_query(
+    StateFilter(
+    ViewCatalog.view_items,
+    ViewCatalog.view_basket),
+    SearchCallback.filter(F.action == SearchAction.filter))
 @router.callback_query(StateFilter(ViewCatalog.search_by_name,
                                    ViewCatalog.select_price),
                        F.data == BaseButtonFont.callback_reset)
