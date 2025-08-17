@@ -26,6 +26,8 @@ start_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
         [InlineKeyboardButton(text=StartButtonFont.catalog,  # каталог
                               callback_data=StartButtonFont.callback_catalog)],
+        [InlineKeyboardButton(text=StartButtonFont.basket,  # корзина
+                              callback_data=StartButtonFont.callback_basket)],
         [InlineKeyboardButton(text=StartButtonFont.channel,  # канал
                               url=StartButtonFont.callback_channel)]
     ]

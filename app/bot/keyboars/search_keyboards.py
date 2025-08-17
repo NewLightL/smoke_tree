@@ -1,4 +1,3 @@
-from typing import Any
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -6,8 +5,10 @@ from app.bot.callback.search_fabric import SearchCallback, SearchAction
 from app.bot.fonts.button_font import BaseButtonFont, SearchButtonFont
 
 
-# TODOs доделать клаву добавить кнопку написать админу
-async def get_search_peg_keyboard(len_products_list: int, page: int = 0) -> InlineKeyboardMarkup:
+async def get_search_peg_keyboard(
+    len_products_list: int,
+    product_id: int|None = None ,
+    page: int = 0) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
 
     per_page = 1
@@ -42,6 +43,15 @@ async def get_search_peg_keyboard(len_products_list: int, page: int = 0) -> Inli
 
             if buttons_row:
                 builder.row(*buttons_row)
+        builder.row(
+            InlineKeyboardButton(
+                text=SearchButtonFont.select_products,
+                callback_data=SearchCallback(
+                    action=SearchAction.select,
+                    product_id=product_id,
+                ).pack()
+            )
+        )
 
     builder.row(InlineKeyboardButton(
         text=SearchButtonFont.return_to_filters,
@@ -57,5 +67,14 @@ async def get_search_peg_keyboard(len_products_list: int, page: int = 0) -> Inli
             action=SearchAction.home
         ).pack()
     ))
+
+    builder.row(
+        InlineKeyboardButton(
+            text=SearchButtonFont.return_to_basket,
+            callback_data=SearchCallback(
+                action=SearchAction.basket,
+            ).pack()
+        )
+    )
 
     return builder.as_markup() # type: ignore
