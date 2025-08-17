@@ -16,6 +16,8 @@ class BaseButtonFont:
 class StartButtonFont:
     catalog = "🏷️ Каталог"
     callback_catalog = "catalog"
+    basket = "🛒 Корзина"
+    callback_basket = "basket"
     channel = "📢 Наш канал"
     callback_channel = settings.link.url_channel
 
@@ -54,6 +56,16 @@ class FiltersButtonFont:
 
 
 class SearchButtonFont:
-    write_to_admin = "🤵‍♂️ Заказать"
-    return_to_home = "🏡 Домой"
+    select_products = "🛒 Добавить в корзину"
+    return_to_basket = "📦 К корзине"
     return_to_filters = "🔍 К фильтрам"
+    return_to_home = "🏡 Домой"
+
+
+class BasketButtonFont:
+    return_to_filters = "🔍 К фильтрам"
+    return_to_home = "🏡 Домой"
+    plus = "+1"
+    minus = "-1"
+    confirm_order = "✅ Оформить заказ"
+    write_admin = "👨‍💼 Написать админу"
