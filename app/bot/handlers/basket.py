@@ -1,3 +1,5 @@
+from pydantic import TypeAdapter
+
 from aiogram import Router, F
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
@@ -25,7 +27,8 @@ settings = load_config()
 async def get_basket(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.view_basket)
-    basket: dict[int, int]|None = await state.get_value("basket")
+    basket_str: str|None = await state.get_value("basket")
+    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
 
     if basket is None or not basket:
         await call.message.edit_text(  # type: ignore
@@ -34,7 +37,8 @@ async def get_basket(call: CallbackQuery, state: FSMContext):
         )
         return
 
-    products_basket = await ProductsDAO.get_all_by_id(list(basket.keys()))
+    ids = TypeAdapter(list[int]).validate_python(basket.keys())
+    products_basket = await ProductsDAO.get_all_by_id(ids)
     if products_basket is None or not products_basket:
         await call.message.edit_text(  # type: ignore
         text=BasketFont.basket_is_empty,
@@ -67,7 +71,8 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_basket)
     await call.bot.delete_message(chat_id=call.message.chat.id,
                                   message_id=call.message.message_id)
-    basket: dict[int, int]|None = await state.get_value("basket")
+    basket_str: str|None = await state.get_value("basket")
+    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
 
     if basket is None or not basket:
         await call.message.edit_text(  # type: ignore
@@ -76,7 +81,8 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
         )
         return
 
-    products_basket = await ProductsDAO.get_all_by_id(list(basket.keys()))
+    ids = TypeAdapter(list[int]).validate_python(basket.keys())
+    products_basket = await ProductsDAO.get_all_by_id(ids)
     if products_basket is None or not products_basket:
         await call.message.edit_text(  # type: ignore
         text=BasketFont.basket_is_empty,
@@ -101,8 +107,11 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
 @router.callback_query(StateFilter(ViewCatalog.view_basket),
                        BasketCallback.filter(F.action == BasketAction.paginate))
 async def paginate_basket(call: CallbackQuery, state: FSMContext, callback_data: BasketCallback):
-    basket: dict[int, int] = await state.get_value("basket")
-    products_basket = await ProductsDAO.get_all_by_id(list(basket.keys()))
+    basket_str: str|None = await state.get_value("basket")
+    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
+
+    ids = TypeAdapter(list[int]).validate_python(basket.keys())
+    products_basket = await ProductsDAO.get_all_by_id(ids)
     product: Products = products_basket[callback_data.page]
 
     await call.message.edit_media(InputMediaPhoto(
@@ -137,11 +146,12 @@ async def plus_products_in_basket(call: CallbackQuery,
                                   state: FSMContext,
                                   callback_data: BasketCallback):
     await call.answer(CallAnswerFont.plus_product)
-    basket: dict[int, int] = await state.get_value("basket")
+    basket: dict[int, int] = TypeAdapter(dict[int, int]).validate_python(await state.get_value("basket"))
     basket[callback_data.product_id] = callback_data.count
     await state.update_data({"basket": basket})
 
-    products_basket = await ProductsDAO.get_all_by_id(list(basket.keys()))
+    ids = TypeAdapter(list[int]).validate_python(basket.keys())
+    products_basket = await ProductsDAO.get_all_by_id(ids)
     product: Products = products_basket[callback_data.page]
 
     await call.message.edit_media(InputMediaPhoto(
@@ -163,11 +173,12 @@ async def minus_products_in_basket(call: CallbackQuery,
                                   state: FSMContext,
                                   callback_data: BasketCallback):
     await call.answer(CallAnswerFont.minus_product)
-    basket: dict[int, int] = await state.get_value("basket")
+    basket: dict[int, int] = TypeAdapter(dict[int, int]).validate_python(await state.get_value("basket"))
     basket[callback_data.product_id] = callback_data.count
     await state.update_data({"basket": basket})
 
-    products_basket = await ProductsDAO.get_all_by_id(list(basket.keys()))
+    ids = TypeAdapter(list[int]).validate_python(basket.keys())
+    products_basket = await ProductsDAO.get_all_by_id(ids)
     product: Products = products_basket[callback_data.page]
 
     await call.message.edit_media(InputMediaPhoto(
@@ -185,12 +196,10 @@ async def minus_products_in_basket(call: CallbackQuery,
 
 @router.callback_query(StateFilter(ViewCatalog.view_basket),
                        BasketCallback.filter(F.action == BasketAction.confirm))
-async def minus_products_in_basket(call: CallbackQuery,
-                                   state: FSMContext,
-                                   callback_data: BasketCallback):
+async def minus_products_in_basket(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.create_order)
-    basket: dict[int, int] = await state.get_value("basket")
+    basket: dict[int, int] = TypeAdapter(dict[int, int]).validate_python(await state.get_value("basket"))
 
     await call.bot.delete_message(chat_id=call.message.chat.id,
                                 message_id=call.message.message_id)
