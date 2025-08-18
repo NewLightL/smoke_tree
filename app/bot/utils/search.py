@@ -35,8 +35,8 @@ class SearchUtils():
     @classmethod  # TODOs доделать вывод фото
     def get_photo_products_by_id(cls, photo: int|None):
         # path = f"../../static/{photo_id}.jpg"
-        if photo is None:
+        path = os.path.join(os.getcwd(), f'{photo}')
+        if photo is None or not os.path.exists(path):
             path = os.path.join(os.getcwd(), settings.core.static_path, "photo/smoke_tree.jpg")
             return FSInputFile(path=path)
-        path = os.path.join(os.getcwd(), f'{photo}')
         return FSInputFile(path=path)
