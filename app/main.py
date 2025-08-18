@@ -1,6 +1,7 @@
 """
 poetry run uvicorn app.main:fastapi_app
 """
+import asyncio
 import logging
 
 from contextlib import asynccontextmanager
@@ -61,6 +62,7 @@ async def lifespan(app: FastAPI):
     dp.message.middleware(RateLimitMiddleware())
 
     webhook_url = settings.api.get_webhook_url
+    await asyncio.sleep(2)
     await bot.set_webhook(url=webhook_url,
                           allowed_updates=dp.resolve_used_update_types(),
                           drop_pending_updates=True,
