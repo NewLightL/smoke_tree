@@ -36,6 +36,7 @@ class SearchUtils():
     def get_photo_products_by_id(cls, photo: int|None):
         # path = f"../../static/{photo_id}.jpg"
         if photo is None:
-            return None
+            path = os.path.join(os.getcwd(), "app/static/photo/smoke_tree.jpg")
+            return FSInputFile(path=path)
         path = os.path.join(os.getcwd(), f'{photo}')
         return FSInputFile(path=path)
