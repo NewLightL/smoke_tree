@@ -9,10 +9,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.templating import Jinja2Templates
 
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-from fastapi_cache.decorator import cache
 
 from sqlalchemy import text
 from sqladmin import Admin
@@ -37,7 +37,6 @@ from app.admin import (
     AuthAdmin,
 )
 from app.db.helper import helper
-from app.api.templates.templates import templates
 
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
@@ -75,6 +74,8 @@ fastapi_app = FastAPI(lifespan=lifespan)
 
 fastapi_app.mount(r"/static", StaticFiles(directory=settings.core.static_path), "static")
 
+templates = Jinja2Templates(r"app/api/templates")
+
 @fastapi_app.get("/", response_class=HTMLResponse)
 async def home_page(request: Request):
     return templates.TemplateResponse(
@@ -94,7 +95,7 @@ fastapi_app.add_middleware(
 
 admin = Admin(fastapi_app, helper.engine,
               authentication_backend=AuthAdmin(settings.api.jwt_key),
-              templates_dir=r"app\api\templates\admin")
+              templates_dir=r"app/api/templates/admin")
 
 admin.add_view(ProductsView)
 admin.add_view(UsersView)
