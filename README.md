@@ -11,7 +11,7 @@
 1. Клонируйте репрозиторий
 
    ```bash
-   git clone https://github.com/NewLightL/smooke_tree
+   git clone https://github.com/NewLightL/smoke_tree
    ```
 
 2. Установите зависимости
@@ -20,7 +20,7 @@
    pip install -r requirements.txt
    ```
 
-3. Создайте файл .env и добавьте все необходимые переменные, записаные в app/core/config.py
+3. Создайте файл .env по примеру из ".env.exemple" и добавьте все необходимые переменные
 
 4. Запустите FastAPI командой, предварительно создав и активировав окружение
 
