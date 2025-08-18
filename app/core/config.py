@@ -47,6 +47,8 @@ class DBConfig(BaseConfig):
 class APIConfig(BaseConfig):
     fastapi_host: str
     fastapi_port: int
+    redis_host: str
+    redis_port: int
     base_site: str
     secret_webhook: str
     jwt_alghoritm: str
