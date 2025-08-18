@@ -9,10 +9,14 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+from fastapi_cache.decorator import cache
+
 from sqlalchemy import text
 from sqladmin import Admin
 
-from app.core import load_config
+from app.core import load_config, redis_backend
 from app.bot import (
     dp,
     bot,
@@ -33,18 +37,21 @@ from app.admin import (
 )
 from app.db.helper import helper
 from app.api.templates.templates import templates
-from app.db.layout import Orders
+
 
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 settings = load_config()
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with helper.engine.begin() as sess:
         await sess.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
         await sess.commit()
+
+    FastAPICache.init(RedisBackend(redis_backend), prefix="fastapi-cache")
 
     dp.include_router(catalog_router)
     dp.include_router(search_router)
