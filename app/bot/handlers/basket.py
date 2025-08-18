@@ -27,15 +27,16 @@ settings = load_config()
 async def get_basket(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.view_basket)
-    basket_str: str|None = await state.get_value("basket")
-    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
+    basket_str: str|None = await state.get_value("basket", {})
 
-    if basket is None or not basket:
+    if basket_str is None or not basket_str:
         await call.message.edit_text(  # type: ignore
         text=BasketFont.basket_is_empty,
         reply_markup=await create_peg_basket(0)
         )
         return
+
+    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
 
     ids = TypeAdapter(list[int]).validate_python(basket.keys())
     products_basket = await ProductsDAO.get_all_by_id(ids)
@@ -71,20 +72,21 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
     await state.set_state(ViewCatalog.view_basket)
     await call.bot.delete_message(chat_id=call.message.chat.id,
                                   message_id=call.message.message_id)
-    basket_str: str|None = await state.get_value("basket")
-    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
+    basket_str: str|None = await state.get_value("basket", {})
 
-    if basket is None or not basket:
-        await call.message.edit_text(  # type: ignore
+    if basket_str is None or not basket_str:
+        await call.message.answer(  # type: ignore
         text=BasketFont.basket_is_empty,
         reply_markup=await create_peg_basket(0)
         )
         return
 
+    basket = TypeAdapter(dict[int, int]).validate_python(basket_str)
+
     ids = TypeAdapter(list[int]).validate_python(basket.keys())
     products_basket = await ProductsDAO.get_all_by_id(ids)
     if products_basket is None or not products_basket:
-        await call.message.edit_text(  # type: ignore
+        await call.message.answer(  # type: ignore
         text=BasketFont.basket_is_empty,
         reply_markup=await create_peg_basket(0)
         )
