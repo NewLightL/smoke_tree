@@ -5,3 +5,4 @@ __all__ = (
 
 from app.core.config import load_config
 from app.core.redis import redis as redis_backend
+from app.core.alive import KeepAlive
