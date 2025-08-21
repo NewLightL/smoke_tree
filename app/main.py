@@ -17,7 +17,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from sqlalchemy import text
 from sqladmin import Admin
 
-from app.core import load_config, redis_backend
+from app.core import load_config, redis_backend, KeepAlive
 from app.bot import (
     dp,
     bot,
@@ -29,7 +29,7 @@ from app.bot import (
     RateLimitMiddleware,
     RateLimitCallMiddleware
 )
-from app.api import webhook_router
+from app.api import webhook_router, health_router
 from app.admin import (
     ProductsView,
     UsersView,
@@ -62,14 +62,19 @@ async def lifespan(app: FastAPI):
     dp.message.middleware(RateLimitMiddleware())
     dp.callback_query.middleware(RateLimitCallMiddleware())
 
+    keep_alive = KeepAlive(settings.api.base_site)
+    keep_alive.start()
+
     webhook_url = settings.api.get_webhook_url
-    await asyncio.sleep(2)
+    await asyncio.sleep(6)
     await bot.set_webhook(url=webhook_url,
                           allowed_updates=dp.resolve_used_update_types(),
                           drop_pending_updates=True,
                           secret_token=settings.api.secret_webhook)
     yield
     await bot.delete_webhook()
+    if keep_alive:
+        keep_alive.stop()
 
 
 fastapi_app = FastAPI(lifespan=lifespan)
@@ -86,6 +91,7 @@ async def home_page(request: Request):
     )
 
 fastapi_app.include_router(webhook_router)
+fastapi_app.include_router(health_router)
 
 fastapi_app.add_middleware(
     CORSMiddleware,
