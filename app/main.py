@@ -26,7 +26,8 @@ from app.bot import (
     search_router,
     basket_router,
     UserInChanel,
-    RateLimitMiddleware
+    RateLimitMiddleware,
+    RateLimitCallMiddleware
 )
 from app.api import webhook_router
 from app.admin import (
@@ -59,6 +60,7 @@ async def lifespan(app: FastAPI):
     dp.include_router(base_router)
     dp.update.outer_middleware(UserInChanel())
     dp.message.middleware(RateLimitMiddleware())
+    dp.callback_query.middleware(RateLimitCallMiddleware())
 
     webhook_url = settings.api.get_webhook_url
     await asyncio.sleep(2)

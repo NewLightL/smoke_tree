@@ -6,7 +6,8 @@ __all__ = (
     "search_router",
     "basket_router",
     "UserInChanel",
-    "RateLimitMiddleware"
+    "RateLimitMiddleware",
+    "RateLimitCallMiddleware"
 )
 
 from app.bot.main import bot, dp
@@ -15,4 +16,4 @@ from app.bot.handlers.catalog import router as catalog_router
 from app.bot.handlers.search import router as search_router
 from app.bot.handlers.basket import router as basket_router
 from app.bot.middleware.base_middleware import UserInChanel
-from app.bot.middleware.tech_middleware import RateLimitMiddleware
+from app.bot.middleware.tech_middleware import RateLimitMiddleware, RateLimitCallMiddleware
