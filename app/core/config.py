@@ -53,7 +53,9 @@ class APIConfig(BaseConfig):
     secret_webhook: str
     jwt_alghoritm: str
     jwt_key: str
-    
+    yandex_token: str
+    yandex_client_id: str
+    yandex_secret: str
 
     @property
     def get_webhook_url(self) -> str:
