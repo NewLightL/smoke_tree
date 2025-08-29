@@ -36,7 +36,6 @@ class SearchUtils():
 
     @classmethod
     def get_photo_products_by_id(cls, photo: str|None):
-        print(f"{photo=}")
         if photo is None:
             path = os.path.join(os.getcwd(), yandex_storage.static_path, "smoke_tree.jpg")
 
