@@ -63,7 +63,7 @@ async def lifespan(app: FastAPI):
     dp.callback_query.middleware(RateLimitCallMiddleware())
 
     keep_alive = KeepAlive(settings.api.base_site)
-    keep_alive.start()
+    # keep_alive.start()
 
     webhook_url = settings.api.get_webhook_url
     await asyncio.sleep(6)
