@@ -1,9 +1,11 @@
 import os
+from pathlib import Path
 
 from aiogram.types.input_file import FSInputFile
 
 from app.db import Products
 from app.core import load_config
+from app.disks import yandex_storage
 from app.bot.fonts.message_font import SearchFont
 from app.bot.utils.catalog import CatalogUtils
 
@@ -11,7 +13,7 @@ from app.bot.utils.catalog import CatalogUtils
 settings = load_config()
 
 class SearchUtils():
-    @classmethod  # TODOS доделать вывод сообщения
+    @classmethod
     def create_message_for_item_card(cls, product: Products|None):
         if not product:
             text = SearchFont.incorrect_name
@@ -32,11 +34,14 @@ class SearchUtils():
         return text
 
 
-    @classmethod  # TODOs доделать вывод фото
-    def get_photo_products_by_id(cls, photo: int|None):
-        # path = f"../../static/{photo_id}.jpg"
-        path = os.path.join(os.getcwd(), f'{photo}')
-        if photo is None or not os.path.exists(path):
-            path = os.path.join(os.getcwd(), settings.core.static_path, "photo/smoke_tree.jpg")
-            return FSInputFile(path=path)
+    @classmethod
+    def get_photo_products_by_id(cls, photo: str|None):
+        print(f"{photo=}")
+        if photo is None:
+            path = os.path.join(os.getcwd(), yandex_storage.static_path, "smoke_tree.jpg")
+
+        else:
+            yandex_storage.check_file_in_static_path(Path(photo).name)
+            path = os.path.join(os.getcwd(), photo)
+
         return FSInputFile(path=path)
