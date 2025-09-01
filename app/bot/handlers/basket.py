@@ -48,10 +48,11 @@ async def get_basket(call: CallbackQuery, state: FSMContext):
         return
 
     product: Products = products_basket[0]
+    count = basket.get(product.id)
     await call.message.edit_media(
         InputMediaPhoto(
             media=SearchUtils.get_photo_products_by_id(product.photo),
-            caption=BasketUtils.get_card_products_in_basket(product)
+            caption=BasketUtils.get_card_products_in_basket(product, int(count))
         ),
         reply_markup=await create_peg_basket(
             len(products_basket),
@@ -93,9 +94,10 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
         return
 
     product: Products = products_basket[0]
+    count = basket.get(product.id)
     await call.message.answer_photo(
         photo=SearchUtils.get_photo_products_by_id(product.photo),
-        caption=BasketUtils.get_card_products_in_basket(product),
+        caption=BasketUtils.get_card_products_in_basket(product, int(count)),
         reply_markup=await create_peg_basket(
             len(products_basket),
             product.id,
