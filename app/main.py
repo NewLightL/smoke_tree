@@ -62,7 +62,7 @@ async def lifespan(app: FastAPI):
     dp.message.middleware(RateLimitMiddleware())
     dp.callback_query.middleware(RateLimitCallMiddleware())
 
-    keep_alive = KeepAlive(settings.api.base_site)
+    # keep_alive = KeepAlive(settings.api.base_site)
     # keep_alive.start()
 
     webhook_url = settings.api.get_webhook_url
@@ -73,8 +73,8 @@ async def lifespan(app: FastAPI):
                           secret_token=settings.api.secret_webhook)
     yield
     await bot.delete_webhook()
-    if keep_alive:
-        keep_alive.stop()
+    # if keep_alive:
+    #     keep_alive.stop()
 
 
 fastapi_app = FastAPI(lifespan=lifespan)
