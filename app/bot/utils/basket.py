@@ -13,9 +13,11 @@ class BasketUtils:
 
         for el in products_basket:
             name = el.name
+            taste = el.taste
+            brand = el.brand
             count = basket[el.id]
             total_cost += el.price * count
 
-            products_text += f"{name} - {count}шт\n"
+            products_text += f"{brand} {name}, {taste} - {count}шт\n"
 
         return BasketFont.card_basket.format(products_text, total_cost)
