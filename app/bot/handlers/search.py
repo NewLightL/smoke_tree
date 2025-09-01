@@ -52,12 +52,14 @@ async def view_product(call: CallbackQuery, state: FSMContext, callback_data: Se
 
     data = await state.get_data()
     basket = data.get("basket")
+    print(basket, type(basket))
 
     if basket is None:
         basket = {}
 
-    if callback_data.product_id in basket.keys():
-        del basket[callback_data.product_id]
+    keys_list = [int(el) for el in basket.keys()]
+    if callback_data.product_id in keys_list:
+        del basket[str(callback_data.product_id)]
         await state.update_data({"basket": basket})
         await call.answer(CallAnswerFont.product_remove)
         return
