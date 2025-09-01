@@ -198,7 +198,7 @@ async def minus_products_in_basket(call: CallbackQuery,
 
 @router.callback_query(StateFilter(ViewCatalog.view_basket),
                        BasketCallback.filter(F.action == BasketAction.confirm))
-async def minus_products_in_basket(call: CallbackQuery, state: FSMContext):
+async def confirm_products_in_basket(call: CallbackQuery, state: FSMContext):
     await call.answer()
     await state.set_state(ViewCatalog.create_order)
     basket: dict[int, int] = TypeAdapter(dict[int, int]).validate_python(await state.get_value("basket"))
