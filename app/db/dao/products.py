@@ -52,7 +52,8 @@ class ProductsDAO(BaseDAO):
     @classmethod  # TODOs сделать поиск по названию
     async def get_all_by_name(cls, name: str) -> Sequence[Products]:
         query = select(cls.model).where(
-        Products.name.ilike(f"%{name}%")
+        Products.name.ilike(f"%{name}%"),
+        Products.amount > 0
     ).order_by(
         func.similarity(Products.name, name).desc()
     )
