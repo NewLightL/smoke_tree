@@ -51,7 +51,7 @@ async def get_basket(call: CallbackQuery, state: FSMContext):
     await call.message.edit_media(
         InputMediaPhoto(
             media=SearchUtils.get_photo_products_by_id(product.photo),
-            caption=SearchUtils.create_message_for_item_card(product)
+            caption=BasketUtils.get_card_products_in_basket(product)
         ),
         reply_markup=await create_peg_basket(
             len(products_basket),
@@ -95,7 +95,7 @@ async def get_basket_delete(call: CallbackQuery, state: FSMContext):
     product: Products = products_basket[0]
     await call.message.answer_photo(
         photo=SearchUtils.get_photo_products_by_id(product.photo),
-        caption=SearchUtils.create_message_for_item_card(product),
+        caption=BasketUtils.get_card_products_in_basket(product),
         reply_markup=await create_peg_basket(
             len(products_basket),
             product.id,
@@ -118,8 +118,8 @@ async def paginate_basket(call: CallbackQuery, state: FSMContext, callback_data:
 
     await call.message.edit_media(InputMediaPhoto(
         media=SearchUtils.get_photo_products_by_id(product.photo),
-        caption=SearchUtils.create_message_for_item_card( # type: ignore
-        product # type: ignore
+        caption=BasketUtils.get_card_products_in_basket( # type: ignore
+        product, callback_data.count # type: ignore
         ),),
         reply_markup=await create_peg_basket(
             len(products_basket), # type: ignore
@@ -158,8 +158,8 @@ async def plus_products_in_basket(call: CallbackQuery,
 
     await call.message.edit_media(InputMediaPhoto(
         media=SearchUtils.get_photo_products_by_id(product.photo),
-        caption=SearchUtils.create_message_for_item_card( # type: ignore
-        product # type: ignore
+        caption=BasketUtils.get_card_products_in_basket( # type: ignore
+        product, callback_data.count # type: ignore
         ),),
         reply_markup=await create_peg_basket(
             len(products_basket), # type: ignore
@@ -185,8 +185,8 @@ async def minus_products_in_basket(call: CallbackQuery,
 
     await call.message.edit_media(InputMediaPhoto(
         media=SearchUtils.get_photo_products_by_id(product.photo),
-        caption=SearchUtils.create_message_for_item_card( # type: ignore
-        product # type: ignore
+        caption=BasketUtils.get_card_products_in_basket( # type: ignore
+        product, callback_data.count
         ),),
         reply_markup=await create_peg_basket(
             len(products_basket), # type: ignore
