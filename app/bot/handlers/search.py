@@ -52,7 +52,6 @@ async def view_product(call: CallbackQuery, state: FSMContext, callback_data: Se
 
     data = await state.get_data()
     basket = data.get("basket")
-    print(basket, type(basket))
 
     if basket is None:
         basket = {}
