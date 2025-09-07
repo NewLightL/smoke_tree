@@ -27,7 +27,6 @@ dependencies = [
     "fastapi-cache2[redis] (>=0.2.2,<0.3.0)",
     "pydantic (>=2.11.7,<3.0.0)",
     "httpx (>=0.28.1,<0.29.0)",
-    "apscheduler (>=3.11.0,<4.0.0)",
     "yadisk[sync-defaults] (>=3.4.0,<4.0.0)",
 ]
 
