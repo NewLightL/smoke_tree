@@ -42,9 +42,10 @@ class YandexStorage(BaseStorage):
 
         with self.client:
             remote_path = str(self.disk_path / Path(name))
-            with open(local_path, "rb") as local_file:
-                local_file.seek(0)
-                self.client.upload(local_file, remote_path)
+            if not self.client.exists(remote_path):
+                with open(local_path, "rb") as local_file:
+                    local_file.seek(0)
+                    self.client.upload(local_file, remote_path)
 
         return name
 
