@@ -15,6 +15,7 @@ class ProductsView(ModelView, model=Products):
 
     column_list = [
         Products.name,
+        Products.taste,
         Products.amount,
         Products.price,
     ] + [
@@ -24,6 +25,7 @@ class ProductsView(ModelView, model=Products):
     column_searchable_list = [
         Products.name,
         Products.brand,
+        Products.taste,
         Products.id
     ]
 
@@ -36,7 +38,8 @@ class ProductsView(ModelView, model=Products):
         Products.name: "Название",
         Products.amount: "Количество",
         Products.price: "Цена",
-        Products.order_product: "Заказ_Товар"
+        Products.order_product: "Заказ_Товар",
+        Products.taste: "Вкус"
     }
 
 
