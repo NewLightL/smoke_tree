@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import BinaryIO
 from pathlib import Path
@@ -9,6 +10,8 @@ from fastapi_storages.base import BaseStorage
 from app.core import load_config
 from app.disks.secure import secure_filename
 
+
+log = logging.getLogger(f"my_logger.{os.path.dirname(os.path.abspath(__file__))}")
 
 class YandexStorage(BaseStorage):
     def __init__(
@@ -34,20 +37,23 @@ class YandexStorage(BaseStorage):
 
 
     def write(self, file: BinaryIO, name: str) -> str: # type: ignore
-        local_path = str(self.static_path / Path(name))
+        try:
+            local_path = str(self.static_path / Path(name))
 
-        with open(local_path, "wb") as local_file:
-            file.seek(0)
-            shutil.copyfileobj(file, local_file)
+            with open(local_path, "wb") as local_file:
+                file.seek(0)
+                shutil.copyfileobj(file, local_file)
 
-        with self.client:
-            remote_path = str(self.disk_path / Path(name))
-            if not self.client.exists(remote_path):
-                with open(local_path, "rb") as local_file:
-                    local_file.seek(0)
-                    self.client.upload(local_file, remote_path)
+            with self.client:
+                remote_path = str(self.disk_path / Path(name))
+                if not self.client.exists(remote_path):
+                    with open(local_path, "rb") as local_file:
+                        local_file.seek(0)
+                        self.client.upload(local_file, remote_path)
 
-        return name
+            return name
+        except Exception as ex:
+            log.fatal(ex)
 
 
     def get_name(self, name: str) -> str:
