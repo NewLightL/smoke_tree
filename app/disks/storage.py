@@ -74,25 +74,31 @@ class YandexStorage(BaseStorage):
                 return 0
 
 
-    def open(self, name: str) -> BinaryIO:
-        path = self.static_path / Path(name).name
+    def open(self, name: str) -> BinaryIO: # type: ignore
+        try:
+            self.check_file_in_static_path(name)
+            path = self.static_path / Path(name).name
 
-        return open(path, "rb")
-
+            return open(path, "rb")
+        except Exception as ex:
+            log.fatal(ex)
 
     def generate_new_filename(self, filename: str) -> str:
-        with self.client:
-            self.check_file_in_static_path(filename)
+        try:
+            with self.client:
+                self.check_file_in_static_path(filename)
 
-            counter = 0
-            path = self.static_path / filename
-            stem, extension = Path(filename).stem, Path(filename).suffix
+                counter = 0
+                path = self.static_path / filename
+                stem, extension = Path(filename).stem, Path(filename).suffix
 
-            while path.exists():
-                counter += 1
-                path = self.static_path / f"{stem}_{counter}{extension}"
+                while path.exists():
+                    counter += 1
+                    path = self.static_path / f"{stem}_{counter}{extension}"
 
-            return path.name
+                return path.name
+        except Exception as ex:
+            log.fatal(ex)
 
 
     def _download_file_to_static(self, disk_path: str, file_path: str) -> None:
