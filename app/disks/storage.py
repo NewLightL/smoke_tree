@@ -50,6 +50,7 @@ class YandexStorage(BaseStorage):
                     with open(local_path, "rb") as local_file:
                         local_file.seek(0)
                         self.client.upload(local_file, remote_path)
+                self.check_file_in_static_path(name)
 
             return name
         except Exception as ex:
@@ -95,22 +96,28 @@ class YandexStorage(BaseStorage):
 
 
     def _download_file_to_static(self, disk_path: str, file_path: str) -> None:
-        with self.client:
-            with open(os.path.join(file_path), "wb") as file:
-                file.seek(0)
-                self.client.download(
-                    disk_path,
-                    file
-                )
+        try:
+            with self.client:
+                with open(os.path.join(file_path), "wb") as file:
+                    file.seek(0)
+                    self.client.download(
+                        disk_path,
+                        file
+                    )
+        except Exception as ex:
+            log.fatal(ex)
 
 
     def check_file_in_static_path(self, name: str) -> None:
-        with self.client:
-            local_path = os.path.join(self.static_path, name)
+        try:
+            with self.client:
+                local_path = os.path.join(self.static_path, name)
 
-            if not os.path.exists(local_path):
-                remote_path = os.path.join(self.disk_path, name)
-                self._download_file_to_static(remote_path, local_path)
+                if not os.path.exists(local_path):
+                    remote_path = os.path.join(self.disk_path, name)
+                    self._download_file_to_static(remote_path, local_path)
+        except Exception as ex:
+            log.fatal(ex)
 
 
 settings = load_config()
