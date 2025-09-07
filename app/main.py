@@ -17,7 +17,7 @@ from fastapi_cache.backends.redis import RedisBackend
 from sqlalchemy import text
 from sqladmin import Admin
 
-from app.core import load_config, redis_backend, KeepAlive
+from app.core import load_config, redis_backend, configure_logging, logger_parent
 from app.bot import (
     dp,
     bot,
@@ -44,6 +44,7 @@ logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 settings = load_config()
+configure_logging(logger_parent, 10)
 
 
 @asynccontextmanager
