@@ -40,9 +40,15 @@ class YandexStorage(BaseStorage):
         try:
             local_path = str(self.static_path / Path(name))
 
-            with open(local_path, "wb") as local_file:
-                file.seek(0)
-                shutil.copyfileobj(file, local_file)
+            if not os.path.exists(local_path):
+                with open(local_path, "wb") as local_file:
+                    file.seek(0)
+                    shutil.copyfileobj(file, local_file)
+            else:
+                with open(local_path, "wb") as local_file:
+                    file.seek(0)
+                    local_file.truncate(0)
+                    shutil.copyfileobj(file, local_file)
 
             with self.client:
                 remote_path = str(self.disk_path / Path(name))
